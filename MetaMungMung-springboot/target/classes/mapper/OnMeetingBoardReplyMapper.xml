@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metanet.metamungmung.mapper.meeting.OnMeetingBoardReplyMapper">
+
+    <!--댓글 조회 -->
+    <select id="getBoardReply" resultMap="replyResultMap" parameterType="com.metanet.metamungmung.vo.meeting.GetOnMeetingBoardVO">
+        SELECT *
+        FROM onMeetingBoard omb
+        LEFT JOIN onMeetingReply omr ON omb.onMeetingBoardIdx = omr.onMeetingBoardIdx AND omb.onMeetingIdx = omr.onMeetingIdx
+        WHERE omb.onMeetingBoardIdx = #{onMeetingBoardIdx} AND omb.onMeetingIdx = #{onMeetingIdx}
+    </select>
+
+    <resultMap id="replyResultMap" type="com.metanet.metamungmung.vo.meeting.GetOnMeetingBoard2VO">
+        <result column="onMeetingBoardIdx" property="onMeetingBoardIdx"/>
+        <result column="onMeetingMemIdx" property="onMeetingMemIdx"/>
+        <result column="onMeetingIdx" property="onMeetingIdx"/>
+        <collection property="replyList" resultMap="replyMap"/>
+    </resultMap>
+
+    <resultMap type="com.metanet.metamungmung.dto.meeting.OnMeetingBoardReplyDTO" id="replyMap" >
+        <result column="onMeetingReplyIdx" property="onMeetingReplyIdx"/>
+        <result column="onMeetingBoardIdx" property="onMeetingBoardIdx"/>
+        <result column="onMeetingMemIdx" property="onMeetingMemIdx"/>
+        <result column="onMeetingIdx" property="onMeetingIdx"/>
+        <result column="memberIdx" property="memberIdx"/>
+        <result column="replyContents" property="replyContents"/>
+        <result column="replyCreateDate" property="replyCreateDate"/>
+        <result column="replyUpdateDate" property="replyUpdateDate"/>
+        <result column="replyWriter" property="replyWriter"/>
+        <result column="replyWriterImg" property="replyWriterImg"/>
+    </resultMap>
+
+
+    <!--전체 댓글 조회 -->
+    <select id="getAllReplyList" resultMap="replyResultMap11" parameterType="com.metanet.metamungmung.dto.meeting.OnMeetingBoardReplyDTO">
+        SELECT *
+        FROM onMeetingBoard omb
+                 LEFT JOIN onMeetingReply omr ON omb.onMeetingBoardIdx = omr.onMeetingBoardIdx AND omb.onMeetingIdx = omr.onMeetingIdx
+        WHERE omb.onMeetingIdx = #{onMeetingIdx}
+    </select>
+
+<!--    <resultMap id="replyResultMap11" type="com.metanet.metamungmung.vo.meeting.GetOnMeetingBoard2VO">-->
+<!--        <result column="onMeetingBoardIdx" property="onMeetingBoardIdx"/>-->
+<!--        <result column="onMeetingMemIdx" property="onMeetingMemIdx"/>-->
+<!--        <result column="onMeetingIdx" property="onMeetingIdx"/>-->
+<!--        <collection property="replyList" resultMap="replyMap11"/>-->
+<!--    </resultMap>-->
+
+    <resultMap type="com.metanet.metamungmung.dto.meeting.OnMeetingBoardReplyDTO" id="replyResultMap11" >
+        <result column="onMeetingReplyIdx" property="onMeetingReplyIdx"/>
+        <result column="onMeetingBoardIdx" property="onMeetingBoardIdx"/>
+        <result column="onMeetingMemIdx" property="onMeetingMemIdx"/>
+        <result column="onMeetingIdx" property="onMeetingIdx"/>
+        <result column="memberIdx" property="memberIdx"/>
+        <result column="replyContents" property="replyContents"/>
+        <result column="replyCreateDate" property="replyCreateDate"/>
+        <result column="replyUpdateDate" property="replyUpdateDate"/>
+        <result column="replyWriter" property="replyWriter"/>
+        <result column="replyWriterImg" property="replyWriterImg"/>
+    </resultMap>
+
+
+
+
+
+    <!--댓글 작성 // Long onMeetingIdx, OnMeetingBoardReplyDTO replyDTO-->
+    <insert id="addReply">
+        insert into onMeetingReply (
+            onMeetingReplyIdx,
+            onMeetingBoardIdx,
+            onMeetingMemIdx,
+            onMeetingIdx,
+            memberIdx,
+            replyContents,
+            replyWriter,
+            replyCreateDate,
+            replyUpdateDate,
+            replyWriterImg
+        ) values (
+                    ONMEETIINGBOARDREPLY_SEQ.nextval,
+                     #{onMeetingBoardIdx},
+                     #{onMeetingMemIdx},
+                     #{onMeetingIdx},
+                     #{memberIdx},
+                     #{replyContents},
+                     #{replyWriter},
+                     sysdate,
+                     sysdate,
+                     #{replyWriterImg}
+                 )
+
+
+    </insert>
+
+
+    <!--댓글 수정 // Long onMeetingIdx, OnMeetingBoardReplyDTO replyDTO-->
+    <update id="updateReply">
+        update onMeetingReply
+        set contents = #{contents}
+        where onMeetingIdx = #{onMeetingIdx}
+        and onMeetigBoardIndex = #{onMeetingBoardIdx}
+        and onMeetingReplyIdx = #{onMeetingReplyIdx}
+        and memberIdx = #{memberIdx}
+
+    </update>
+
+    <!--댓글 삭제 // Long onMeetingIdx, Long onMeetingReplyIdx-->
+    <delete id="deleteReply">
+        delete from onMeetingReply
+        where onMeetingReplyIdx = #{onMeetingReplyIdx}
+        and memberIdx = #{memberIdx}
+
+    </delete>
+
+
+</mapper>

@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metanet.metamungmung.mapper.meeting.OffMeetingMapper">
+    <!-- 오프 모임 목록 조회 -->
+    <resultMap id="GetOffMeetingHostVO" type="com.metanet.metamungmung.vo.meeting.GetOffMeetingHostVO">
+        <result column="memberIdx" property="memberIdx"></result>
+        <result column="memberId" property="memberId"></result>
+        <result column="memberImg" property="memberImg"></result>
+    </resultMap>
+
+    <resultMap id="GetOffMeeting2VO" type="com.metanet.metamungmung.vo.meeting.GetOffMeeting2VO">
+        <result column="offMeetingIdx" property="offMeetingIdx"></result>
+        <result column="title" property="title"></result>
+        <result column="meetingDate" property="meetingDate"></result>
+        <result column="limit" property="limit"></result>
+        <result column="contents" property="contents"></result>
+        <result column="createDate" property="createDate"></result>
+        <result column="updateDate" property="updateDate"></result>
+        <result column="status" property="status"></result>
+        <result column="latitude" property="latitude"></result>
+        <result column="longitude" property="longitude"></result>
+        <result column="locationAddress" property="locationAddress"></result>
+        <result column="startTime" property="startTime"></result>
+        <result column="headcount" property="headcount"></result>
+        <association property="host" resultMap="GetOffMeetingHostVO"></association>
+    </resultMap>
+
+    <select id="getOffMeetingList" parameterType="com.metanet.metamungmung.vo.meeting.GetOffMeeting2VO" resultMap="GetOffMeeting2VO">
+        select distinct om.*
+        from
+            offMeeting om
+        left join
+            offMeetingMem omm
+        on om.offMeetingIdx = omm.offMeetingIdx
+        left join
+            member m
+        on omm.memberIdx = m.memberIdx
+        where omm.onMeetingIdx = #{onMeetingIdx}
+        and om.status = 'ACTIVE' or om.status = 'REACTIVE'
+        and omm.isHost = '1'
+        order by om.createDate desc
+    </select>
+
+
+    <!--오프 모임 상세 조회-->
+    <resultMap id="getOffMeetingHostMap" type="com.metanet.metamungmung.vo.meeting.GetOffMeetingHostVO">
+        <result column="memberIdx" property="memberIdx"></result>
+        <result column="memberId" property="memberId"></result>
+        <result column="memberImg" property="memberImg"></result>
+    </resultMap>
+
+    <resultMap id="getOffMeetingMap" type="com.metanet.metamungmung.vo.meeting.GetOffMeeting2VO">
+        <result column="offMeetingIdx" property="offMeetingIdx"></result>
+        <result column="title" property="title"></result>
+        <result column="meetingDate" property="meetingDate"></result>
+        <result column="limit" property="limit"></result>
+        <result column="contents" property="contents"></result>
+        <result column="createDate" property="createDate"></result>
+        <result column="updateDate" property="updateDate"></result>
+        <result column="status" property="status"></result>
+        <result column="latitude" property="latitude"></result>
+        <result column="longitude" property="longitude"></result>
+        <result column="locationAddress" property="locationAddress"></result>
+        <result column="startTime" property="startTime"></result>
+        <result column="headcount" property="headcount"></result>
+        <association property="host" resultMap="getOffMeetingHostMap"></association>
+    </resultMap>
+
+    <select id="getOffMeeting" parameterType="com.metanet.metamungmung.vo.meeting.GetOffMeeting2VO" resultMap="getOffMeetingMap">
+        select om.*, m.*
+        from
+            offMeeting om
+        join
+            offMeetingMem omm
+        on om.offMeetingIdx = omm.offMeetingIdx
+        join
+            member m
+        on omm.memberIdx = m.memberIdx
+        where om.offMeetingIdx = #{offMeetingIdx}
+        and (om.status = 'ACTIVE' or om.status = 'REACTIVE')
+        and omm.isHost = '1'
+    </select>
+
+
+    <!-- 나의 오프모임 목록 조회 -->
+    <select id="getMyOffMeetingList" resultType="com.metanet.metamungmung.dto.meeting.OffMeetingDTO">
+        select * from
+        offMeeting o
+        left join offMeetingMem om
+        on o.offMeetingIdx = om.offMeetingIdx
+        left join onMeetingMem onm
+        on onm.onMeetingMemIdx = om.onMeetingMemIdx
+        where onm.onMeetingIdx = #{onMeetingIdx}
+        and om.memberIdx = #{memberIdx}
+        and onm.onMeetingMemIdx = #{onMeetingMemIdx}
+        and o.status = 'ACTIVE'
+        order by o.createDate desc
+    </select>
+
+    <!--오프 모임 참여자 목록 조회-->
+    <resultMap id="GetOffMeetingMemVO" type="com.metanet.metamungmung.vo.meeting.GetOffMeetingMemVO">
+        <result column="memberIdx" property="memberIdx"></result>
+        <result column="memberId" property="memberId"></result>
+        <result column="sex" property="sex"></result>
+        <result column="birth" property="birth"></result>
+        <result column="memberImg" property="memberImg"></result>
+    </resultMap>
+
+    <resultMap id="GetOffMeetingVO" type="com.metanet.metamungmung.vo.meeting.GetOffMeetingVO">
+        <result column="offMeetingIdx" property="offMeetingIdx"></result>
+        <collection property="offMeetingMembers" resultMap="GetOffMeetingMemVO"></collection>
+    </resultMap>
+
+    <select id="getOffMeetingMembers" parameterType="com.metanet.metamungmung.vo.meeting.GetOffMeetingVO" resultMap="GetOffMeetingVO">
+        select *
+        from
+            offMeetingMem a
+        left join
+            member b
+            on a.memberIdx = b.memberIdx
+        where
+            a.offMeetingIdx = #{offMeetingIdx}
+            and a.status = 'ACTIVE'
+            and b.status = 'ACTIVE'
+        order by b.memberId
+    </select>
+
+    <!-- 오프 모임 등록 -->
+    <insert id="registerOffMeeting">
+        insert into
+        offMeeting (
+            offMeetingIdx,
+            title,
+            meetingDate,
+            limit,
+            contents,
+            createDate,
+            updateDate,
+            status,
+            latitude,
+            longitude,
+            locationAddress,
+            startTime,
+            headcount
+        )
+        values (
+                #{offMeetingIdx},
+                #{title},
+                #{meetingDate},
+                #{limit},
+                #{contents},
+                sysdate,
+                sysdate,
+                DEFAULT,
+                #{latitude, jdbcType=VARCHAR},
+                #{longitude, jdbcType=VARCHAR},
+                #{locationAddress, jdbcType=VARCHAR},
+                #{startTime},
+                default
+        )
+        <selectKey keyProperty="offMeetingIdx" order="BEFORE" resultType="Long">
+            select offMeeting_seq.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!-- 오프 모임 생성 시 해당 회원을 호스트로 지정하여 오프 모임 회원 등록 -->
+    <insert id="registerOffMeetingHost">
+        insert into offMeetingMem (
+            offMeetingMemIdx,
+            onMeetingMemIdx,
+            onMeetingIdx,
+            offMeetingIdx,
+            memberIdx,
+            createDate,
+            updateDate,
+            status,
+            isHost
+        )
+        values (
+            #{offMeetingMemIdx},
+            #{onMeetingMemIdx},
+            #{onMeetingIdx},
+            #{offMeetingIdx},
+            #{memberIdx},
+            sysdate,
+            sysdate,
+            DEFAULT,
+            1
+        )
+        <selectKey keyProperty="offMeetingMemIdx" order="BEFORE" resultType="Long">
+            select offMeetingMem_seq.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!-- 오프 모임 수정 -->
+    <update id="updateOffMeeting">
+        update offMeeting set
+            title = #{title},
+            meetingDate = #{meetingDate},
+            limit = #{limit},
+            contents = #{contents},
+            updateDate = sysdate,
+            startTime = #{startTime}
+        where offMeetingIdx = #{offMeetingIdx}
+    </update>
+
+    <!-- 오프 모임 삭제 -->
+    <update id="deleteOffMeeting">
+        update offMeeting set
+        status = 'DELETED'
+        where offMeetingIdx = #{offMeetingIdx}
+        and status = 'ACTIVE'
+        or status = 'REACTIVE'
+    </update>
+
+    <!-- 오프 모임 참여 회원인지 체크 -->
+    <select id="checkMemberByMemberIdx" parameterType="map" resultType="com.metanet.metamungmung.dto.meeting.OffMeetingMemDTO">
+        select *
+        from
+            offMeetingMem
+        where memberIdx = #{findMemberIdx}
+        and offMeetingIdx = #{offMeetingIdx}
+        and status = 'ACTIVE'
+    </select>
+
+    <!-- 오프 모임 참여 하기 -->
+    <insert id="joinOffMeeting">
+            insert into offMeetingMem (
+            offMeetingMemIdx,
+            onMeetingMemIdx,
+            onMeetingIdx,
+            offMeetingIdx,
+            memberIdx,
+            createDate,
+            updateDate,
+            status,
+            isHost
+        )
+        values (
+            #{offMeetingMemIdx},
+            #{onMeetingMemIdx},
+            #{onMeetingIdx},
+            #{offMeetingIdx},
+            #{memberIdx},
+            sysdate,
+            sysdate,
+            DEFAULT,
+            DEFAULT
+        )
+        <selectKey keyProperty="offMeetingMemIdx" order="BEFORE" resultType="Long">
+            select offMeetingMem_seq.nextval from dual
+        </selectKey>
+    </insert>
+
+    <!-- 오프미팅 참여시 headcount 증가 -->
+    <update id="plusHeadcount">
+        update offMeeting set
+            headcount = headcount + 1
+        where offMeetingIdx = #{offMeetingIdx}
+    </update>
+
+    <!-- 오프 모임 참여 취소 -->
+    <delete id="cancelJoinOffMeeting" parameterType="map">
+        delete offMeetingMem
+        where memberIdx = #{findMemberIdx}
+        and offMeetingIdx = #{offMeetingIdx}
+        and status = 'ACTIVE'
+    </delete>
+
+    <!-- 오프미팅 참여시 headcount 감소 -->
+    <update id="minusHeadcount">
+        update offMeeting set
+        headcount = headcount - 1
+        where offMeetingIdx = #{offMeetingIdx}
+    </update>
+</mapper>

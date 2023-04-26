@@ -1,0 +1,150 @@
+/* member style */
+/* 공통 */
+input[type='radio'] {
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+/* Member Signup */
+.membership-signup > form {
+    max-width: 580px;
+    margin: 10px auto;
+    border: solid #a7a7a7;
+    border-radius: 10px;
+}
+.membership-signup > form > div {
+    font-weight: bold;
+    color: #000;
+    margin: 50px;
+}
+.membership-signup input:not([type='radio'], .birth-info){
+    width: 100%;
+    height: 45px;
+    border-radius: 5px;
+    border-style: groove;
+    border-width: 1.5px;
+    margin-top: -2px;
+    margin-bottom: 10px;
+    outline: none;
+    border-color: #d2cfcf;
+}
+#form-id {
+    position: relative;
+}
+#form-id button {
+    position: absolute;
+    width: 90px;
+    height: 30px;
+    top: 0;
+    bottom: 16px;
+    right: 10px;
+    margin: auto 0;
+    border-radius: 8px;
+    background-color: #b7e0f0;
+    font-weight: bold;
+}
+#btnSignup {
+    width: 90%;
+    margin: 10px 24px;
+    border-radius: 8px;
+    background-color: #b7e0f0;
+    font-weight: bold;
+}
+
+/* Member Login */
+.membership-login > form {
+    max-width: 500px;
+    margin: 10px auto;
+    border: solid #a7a7a7; 
+    border-radius: 10px;
+}
+.membership-login > form > div {
+    font-weight: bold;
+    color: #000;
+    margin: 15px 60px;
+}
+.membership-login input{
+    width: 100%;
+    height: 45px;
+    border-radius: 5px;
+    border-style: groove;
+    border-width: 1.5px;
+    outline: none;
+    border-color: #d2cfcf;
+}
+#btnLogin {
+    width: 60%;
+    border-radius: 8px;
+    background-color: #b7e0f0;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    margin-left: 20%;
+}
+
+/* Member Modify */
+#btnSave{
+    width: 60%;
+    border-radius: 8px;
+    background-color: #b7e0f0;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-left: 20%;
+}
+#btnDelete{
+    width: 20%;
+    border-radius: 8px;
+    background-color: #c71931;
+    margin-top: 10px;
+    font-weight: bold;
+    float: right;
+    margin-top: 30%;
+    margin-right: -50px;
+}
+
+/* Member Pet Register */
+.membership-register > form {
+    max-width: 550px;
+    margin: 10px auto;
+    border: solid #b7e0f0;
+    border-radius: 10px;
+    text-align: center;
+}
+.membership-register > form > div {
+    font-weight: bold;
+    color: #000;
+    margin: 50px 0 0 0;
+}
+.membership-register input:not[type='radio'] {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    border-style: groove;
+    border-width: 1.5px;
+    margin-top: -2px;
+    margin-bottom: 10px;
+    outline: none;
+    border-color: #d2cfcf;
+}
+#btnRegister {
+    width: 80%;
+    margin: 10px 0 20px 0;
+    border-radius: 8px;
+    background-color: #b7e0f0;
+    font-weight: bold;
+}
+
+/* 이미지 첨부 부분 */
+#preview-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 6%;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #7abfdb;
+    background-repeat : no-repeat;
+}
+#input-image {
+    margin-left: 100px;
+    margin-bottom: 20px;
+}

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.metanet.metamungmung.mapper.member.MemberMapper">
+
+    <!-- Member 부분   -->
+    <select id="getMemberList" resultType="com.metanet.metamungmung.dto.member.MemberDTO">
+        select * from member
+    </select>
+
+    <select id="getMemberInfo" resultType="com.metanet.metamungmung.dto.member.MemberDTO">
+        select * from member where memberIdx = #{memberIdx}
+    </select>
+
+    <select id="findByUserId" resultType="com.metanet.metamungmung.dto.member.MemberDTO">
+        select * from member where memberId = #{memberId}
+    </select>
+
+    <select id="findId" resultType="java.lang.String">
+        select memberId from member where email = #{email}
+    </select>
+
+    <insert id="signUp">
+        insert into member (memberIdx, memberId, password, memberName, sex, birth, email, phone, address1, address2)
+        values (member_seq.nextval, #{memberId}, #{password}, #{memberName}, #{sex}, #{birth}, #{email}, #{phone}, #{address1}, #{address2})
+    </insert>
+
+    <select id="idCheck" resultType="int">
+        select count(*) from member where memberId = #{memberId}
+    </select>
+
+    <select id="login" resultType="com.metanet.metamungmung.dto.member.MemberDTO">
+        select * from member where memberId = #{memberId}
+    </select>
+
+    <update id="modify">
+        update member
+        set password = #{password},
+            email= #{email},
+            phone= #{phone},
+            address1 = #{address1},
+            address2 = #{address2}
+        where memberIdx = #{memberIdx}
+    </update>
+
+    <update id="withdrawal">
+        update member
+        set status = #{status}
+        where memberIdx = #{memberIdx}
+    </update>
+
+    <update id="updateAuth">
+        update member
+        set authority = #{authority}
+        where memberIdx = #{memberIdx}
+    </update>
+
+    <!-- 스프링 시큐리티에서 사용할 이메일 -->
+    <select id="getUserEmail" resultType="com.metanet.metamungmung.dto.member.MemberDTO">
+        select *
+        from member
+        where
+            email = #{email}
+    </select>
+
+    <!--  Pet 부분  -->
+    <select id="getPetList" resultType="com.metanet.metamungmung.dto.member.PetDTO">
+        select * from pet where memberIdx = #{memberIdx}
+    </select>
+
+    <insert id="register">
+        insert into pet (petIdx, memberIdx, animalRegistrationNo, petName, sex, birth, petImg)
+        values (pet_seq.nextval, #{memberIdx}, #{animalRegistrationNo}, #{petName}, #{sex}, #{birth}, #{petImg})
+    </insert>
+
+    <delete id="delete">
+        delete from pet where petIdx = #{petIdx}
+    </delete>
+
+
+    <!--    포인트 적립-->
+    <update id="accumulatePoint">
+        update member
+        set point = #{point}
+        where memberIdx = #{memberIdx}
+    </update>
+
+</mapper>
